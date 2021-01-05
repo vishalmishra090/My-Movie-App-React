@@ -1,15 +1,23 @@
-import React from "react"
+import React, { useState } from "react"
 import './App.css';
-
+import SearchBar from "./components/SearchBar/SearchBar";
+import ListMovie from "./components/ListMovie/ListMovie";
 function App() {
-  async function handelClick(){
-     let res = await fetch("/.netlify/functions/handelSearch?name=vishal mishra&name=ram");
-     let msg = await res.json();
-     console.log(msg);
+
+  let [searchResult, setSearchResult] = useState([]);
+  
+  async function handelSearch(value){
+     let res = await fetch("/.netlify/functions/handelSearch?query="+value);
+     if(res.status === 200){
+       let resBody = await res.json();
+       setSearchResult([...resBody.results]);
+     }
   }
+
   return (
     <div className="App">
-       <button onClick={handelClick}>ClickMe</button>
+       <SearchBar handelSearch = {handelSearch}/>
+       {(searchResult.length !== 0) && <ListMovie listItem = {[...searchResult]}/>}
    </div>
   );
 }
