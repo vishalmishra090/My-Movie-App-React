@@ -1,24 +1,24 @@
 import React from "react";
-import { pos_img_url, ph_img_url } from "../url";
+import { pos_img_url, ph_img_url } from "../../url";
 
-function Card({ cardData }) {
+function Card({ cardItem }) {
   let imgUrl = ph_img_url;
-  cardData.poster_path && (imgUrl = `${pos_img_url}${cardData.poster_path}`);
+  cardItem.poster_path && (imgUrl = `${pos_img_url}${cardItem.poster_path}`);
 
   return (
     <div className="card">
-      <img src={imgUrl} alt={cardData.original_title} />
-      {console.log(pos_img_url)}
-      <h3>{cardData.original_title}</h3>
+      <img src={imgUrl} alt={cardItem.original_title} />
+      <h3>{cardItem.original_title}</h3>
     </div>
   );
 }
 
-export default function ListResult({ searchData }) {
+export default function ListMovie({ listItem }) {
+  
   return (
     <div className="searchResult">
-      {searchData.map((cardData) => (
-        <Card key={cardData.id} cardData={cardData} />
+      {listItem.map((cardItem) => (
+        <Card key={cardItem.id} cardItem={cardItem} />
       ))}
     </div>
   );
