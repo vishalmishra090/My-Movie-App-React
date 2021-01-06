@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import './App.css';
-import SearchBar from "./components/SearchBar/SearchBar";
-import ListMovie from "./components/ListMovie/ListMovie";
+import SearchBar from "./components/SearchBar";
+import ListMovie from "./components/ListMovie";
 function App() {
 
   let [searchResult, setSearchResult] = useState([]);
