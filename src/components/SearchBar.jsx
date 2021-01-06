@@ -27,15 +27,15 @@ export default function SearchBar({ handelSearch }) {
     }
   }
   return (
-    <>
+    <div className="searchBar">
       <input
         type="text"
         value={value}
         onChange={handelChange}
         onKeyDown={handelKeyDown}
-        placeholder="type any movie name.."
+        placeholder="Search movie by name..."
       />
       <button onClick={handelClick}>Search</button>
-    </>
+    </div>
   );
 }
