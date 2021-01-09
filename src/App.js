@@ -25,11 +25,13 @@ useEffect(() => {
           let res = await fetch(`${url}${searchValue}&page=${page + 1}`);
           if (res.status === 200) {
             let resBody = await res.json();
-            
-              setloding(false);
-              setResults(
-                (prevResults) => new Set([...prevResults, ...resBody.results])
-              );
+              if (resBody.total_pages !== 1){
+                // console.log("here...")
+                setloding(false);
+                setResults(
+                  (prevResults) => new Set([...prevResults, ...resBody.results])
+                );
+              } 
               if(page + 1 !== resBody.total_pages)
                   setPage(resBody.page);
             
@@ -43,7 +45,7 @@ useEffect(() => {
     
   }
 
-  console.log("ok...");
+  // console.log("ok...");
   }, [searchValue, page]);
   
   
@@ -51,12 +53,15 @@ useEffect(() => {
     setSearchValue(value);
     setloding(true);
      let res = await fetch(`/.netlify/functions/handelSearch?query=${value}&page=${1}`);
+    //  console.log(res);
      if(res.status === 200){
        let resBody = await res.json();
        setloding(false);
        setResults([...resBody.results]);
-       console.log(resBody);
-       setPage(resBody.page);
+      //  console.log(resBody);
+       if (resBody.page !== resBody.total_pages);
+          setPage(resBody.page);
+       
      }
   }
 
