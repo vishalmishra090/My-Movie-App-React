@@ -76,3 +76,25 @@ code {
   margin: 0;
   padding: 0;
 }
+
+.loader{
+  height: 100px;
+}
+.loader span::after{
+  content: "";
+  font-size: 18px;
+  line-height: 100px;
+  animation-name: example;
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease;
+}
+@keyframes example {
+  0%   {content: "";}
+  25%  {content: "🔸";}
+  50%  {content: "🔸 🔸";}
+  75%  {content: "🔸 🔸 🔸";}
+  100% {content: "🔸 🔸 🔸 🔸";}
+}
+
+

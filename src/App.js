@@ -1,25 +1,76 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import './App.css';
 import SearchBar from "./components/SearchBar";
 import ListMovie from "./components/ListMovie";
 function App() {
 
-  let [searchResult, setSearchResult] = useState([]);
+  let [results, setResults] = useState([])
+  let [searchValue, setSearchValue] = useState("")
+  let [loading, setloding] = useState(false);
+  let [page, setPage] = useState(0)
+ 
+
+useEffect(() => {
+
+  let target = document.querySelector("#last");
+  // console.log(target);
+  if(target != null){
+    var observer = new IntersectionObserver((entries) => {
+      entries.forEach(async function (entry) {
+        if (entry.isIntersecting) {
+          observer.disconnect();
+          let url = "/.netlify/functions/handelSearch?query=";
+
+          setloding(true);
+          let res = await fetch(`${url}${searchValue}&page=${page + 1}`);
+          if (res.status === 200) {
+            let resBody = await res.json();
+            
+              setloding(false);
+              setResults(
+                (prevResults) => new Set([...prevResults, ...resBody.results])
+              );
+              if(page + 1 !== resBody.total_pages)
+                  setPage(resBody.page);
+            
+          }
+          
+        }
+      });
+    });
+    observer.observe(target);
+
+    
+  }
+
+  console.log("ok...");
+  }, [searchValue, page]);
+  
   
   async function handelSearch(value){
-     let res = await fetch("/.netlify/functions/handelSearch?query="+value);
+    setSearchValue(value);
+    setloding(true);
+     let res = await fetch(`/.netlify/functions/handelSearch?query=${value}&page=${1}`);
      if(res.status === 200){
        let resBody = await res.json();
-       setSearchResult([...resBody.results]);
+       setloding(false);
+       setResults([...resBody.results]);
+       console.log(resBody);
+       setPage(resBody.page);
      }
   }
 
   return (
     <div className="App">
-       <SearchBar handelSearch = {handelSearch}/>
-       {(searchResult.length !== 0) && <ListMovie listItem = {[...searchResult]}/>}
-   </div>
+      <SearchBar handelSearch={handelSearch} />
+      {results.length !== 0 && <ListMovie listItem={[...results]} />}
+      {loading && (
+        <div className="loader">
+          <span></span>
+        </div>
+      )}
+    </div>
   );
 }
 
-export default App;
+export default React.memo(App);
